@@ -13,9 +13,11 @@
             <p>Passive Income: +<span id="gps">0</span>/sec</p>
         </header>
 
-        <!-- Main Clicker Section -->
+        <!-- Main Clicker Section with Custom Image Support -->
         <main class="click-section">
-            <button id="clickBtn" class="click-cookie">🪙</button>
+            <button id="clickBtn" class="click-cookie">
+                <img src="clicker-image.png" alt="Click Me!" id="mainImg">
+            </button>
         </main>
 
         <!-- Upgrade Shop Section -->
@@ -47,24 +49,23 @@
             </div>
         </section>
 
-        <!-- Save & Administration Buttons (NEW PART) -->
+        <!-- Save & Administration Buttons -->
         <div class="control-section" style="margin-top: 20px;">
             <button id="saveBtn" class="shop-btn" style="background-color: #3498db;">Save Game</button>
             <button id="resetBtn" class="shop-btn" style="background-color: #e74c3c;">Reset Game</button>
         </div>
 
-        <!-- Leaderboard Section (NEW PART) -->
+        <!-- Leaderboard Section -->
         <section class="leaderboard-section" style="margin-top: 30px; border-top: 2px solid #7f8c8d; padding-top: 20px;">
-            <h2>🏆 Local High Scores</h2>
+            <h2>🏆 Live Global Leaderboard</h2>
             <button id="submitScoreBtn" class="shop-btn" style="background-color: #f1c40f; color: #2c3e50; margin-bottom: 10px;">Submit My Score</button>
             <ol id="leaderboardList" style="text-align: left; background: #2c3e50; padding: 15px 40px; border-radius: 8px; margin: 0;"></ol>
         </section>
 
-    </div> <!-- This closes the game-container -->
-<!-- Put this right above your script.js line -->
-<script src="https://jsdelivr.net"></script>
-<script src="script.js"></script>
+    </div>
 
+    <!-- Supabase CDN Link first, then your logic script -->
+    <script src="https://jsdelivr.net"></script>
     <script src="script.js"></script>
 </body>
 </html>

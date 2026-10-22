@@ -20,17 +20,24 @@ body {
 
 /* The Main Button Styling & Juice */
 .click-cookie {
-    font-size: 80px;
     background: none;
     border: none;
     cursor: pointer;
     transition: transform 0.05s ease-in-out;
     outline: none;
     user-select: none;
+    padding: 0;
 }
 
 .click-cookie:active {
-    transform: scale(0.9); /* Visual response on click */
+    transform: scale(0.92); /* Shrinks slightly when clicked for impact */
+}
+
+#mainImg {
+    width: 150px;
+    height: 150px;
+    object-fit: contain;
+    pointer-events: none;
 }
 
 /* Shop Styling */

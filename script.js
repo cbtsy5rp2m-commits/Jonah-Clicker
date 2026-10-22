@@ -1,4 +1,11 @@
-// Game State
+// --- 0. CLOUD DATABASE SETUP ---
+const SUPABASE_URL = "https://jqteppzgagqwljqpvmbn.supabase.co/rest/v1/"; 
+const SUPABASE_ANON_KEY = "sb_publishable_t4HA7S1fKrxVCxcaUgFfvg_Bw0Gb1uJ"; 
+
+// Initializing the Supabase Client with a fixed name variation to prevent conflict crashes
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// --- 1. GAME STATE VARIABLES ---
 let score = 0;
 let passiveIncome = 0;
 
@@ -11,9 +18,7 @@ let grandmaCost = 100;
 let factoryCount = 0;
 let factoryCost = 1000;
 
-let highScores = [];
-
-// DOM Elements
+// --- 2. DOM ELEMENTS ---
 const scoreDisplay = document.getElementById('score');
 const gpsDisplay = document.getElementById('gps');
 const clickBtn = document.getElementById('clickBtn');
@@ -32,7 +37,7 @@ const resetBtn = document.getElementById('resetBtn');
 const submitScoreBtn = document.getElementById('submitScoreBtn');
 const leaderboardList = document.getElementById('leaderboardList');
 
-// --- 1. CORE MECHANICS ---
+// --- 3. CORE TRANSACTIONS ---
 clickBtn.addEventListener('click', () => {
     score += 1;
     updateUI();
@@ -76,7 +81,7 @@ function updateUI() {
     factoryCostDisplay.innerText = factoryCost;
 }
 
-// --- 2. SAVE & LOAD SYSTEM ---
+// --- 4. PERSISTENT BROWSER SAVES ---
 function saveGame() {
     const gameSave = {
         score: score,
@@ -86,8 +91,7 @@ function saveGame() {
         grandmaCount: grandmaCount,
         grandmaCost: grandmaCost,
         factoryCount: factoryCount,
-        factoryCost: factoryCost,
-        highScores: highScores
+        factoryCost: factoryCost
     };
     localStorage.setItem("clickerGameSave", JSON.stringify(gameSave));
 }
@@ -104,73 +108,58 @@ function loadGame() {
         grandmaCost = gameSave.grandmaCost || 100;
         factoryCount = gameSave.factoryCount || 0;
         factoryCost = gameSave.factoryCost || 1000;
-        highScores = gameSave.highScores || [];
-        
         updateUI();
-        renderLeaderboard();
     }
 }
 
-// Manual Save and Reset Targets
 saveBtn.addEventListener('click', () => {
     saveGame();
-    alert("Game Saved Successfully!");
+    alert("Game Progress Saved!");
 });
 
 resetBtn.addEventListener('click', () => {
-    if (confirm("Are you sure you want to reset everything?")) {
+    if (confirm("Reset game? All local gold and items will be wiped.")) {
         localStorage.removeItem("clickerGameSave");
-        location.reload(); // Refresh the page to wipe everything back to 0
+        location.reload();
     }
 });
 
-// Auto-Save Loop (Saves automatically every 30 seconds)
+// Auto-save tracker running every 30 seconds
 setInterval(saveGame, 30000);
 
-
-// --- 3. LIVE CLOUD LEADERBOARD SYSTEM ---
-
-// Go to your Supabase Project Settings > API to get these keys:
-const SUPABASE_URL = "https://jqteppzgagqwljqpvmbn.supabase.co/rest/v1/";
-const SUPABASE_ANON_KEY = "sb_publishable_t4HA7S1fKrxVCxcaUgFfvg_Bw0Gb1uJ";
-
-// Initialize the Supabase Client
-const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
+// --- 5. LIVE GLOBAL LEADERBOARD LOGIC ---
 submitScoreBtn.addEventListener('click', async () => {
     const name = prompt("Enter your name for the LIVE leaderboard:");
     if (name) {
-        // Send the score straight to your cloud database!
-        const { error } = await supabase
+        const { error } = await supabaseClient
             .from('leaderboard')
             .insert([{ name: name, score: Math.floor(score) }]);
 
         if (error) {
-            console.error("Error saving score:", error);
+            console.error("Leaderboard Error:", error);
+            alert("Could not connect to database.");
         } else {
-            alert("Score submitted to the live cloud!");
-            fetchLiveLeaderboard(); // Refresh the list
+            alert("Score posted successfully!");
+            fetchLiveLeaderboard();
         }
     }
 });
 
 async function fetchLiveLeaderboard() {
-    // Get the top 5 highest scores from the cloud
-    const { data, error } = await supabase
+    const { data, error } = await supabaseClient
         .from('leaderboard')
         .select('name, score')
         .order('score', { ascending: false })
         .limit(5);
 
     if (error) {
-        console.error("Error fetching leaderboard:", error);
+        console.error("Fetch Error:", error);
         return;
     }
 
-    // Render the cloud scores onto the screen
     leaderboardList.innerHTML = "";
     if (data.length === 0) {
-        leaderboardList.innerHTML = "<li>No global scores yet!</li>";
+        leaderboardList.innerHTML = "<li>No global scores posted yet!</li>";
         return;
     }
     data.forEach(entry => {
@@ -180,20 +169,13 @@ async function fetchLiveLeaderboard() {
     });
 }
 
-// Change your window.onload to pull from the cloud
-window.onload = () => {
-    loadGame(); // Keeps their personal gold save local to their browser
-    fetchLiveLeaderboard(); // Pulls the shared leaderboard from the cloud
-};
-
-// --- 4. GAME INITIALIZATION ---
-// Engine loop running 10x per second
+// --- 6. TICK ENGINE TIMERS ---
 setInterval(() => {
     score += (passiveIncome / 10);
     updateUI();
 }, 100);
 
-// Automatically load the player's save when they open the website
 window.onload = () => {
     loadGame();
+    fetchLiveLeaderboard();
 };
