@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultimate Clicker Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <header>
+            <h1>Gold: <span id="score">0</span></h1>
+            <p>Passive Income: +<span id="gps">0</span>/sec</p>
+        </header>
+
+        <!-- Main Clicker Section -->
+        <main class="click-section">
+            <button id="clickBtn" class="click-cookie">🪙</button>
+        </main>
+
+        <!-- Upgrade Shop Section -->
+        <section class="shop-section">
+            <h2>Shop Upgrades</h2>
+            
+            <div class="upgrade-item">
+                <div class="info">
+                    <h3>Click-Bot</h3>
+                    <p>Clicks for you once every second</p>
+                </div>
+                <button id="buyCursor" class="shop-btn">Buy (Cost: <span id="cursorCost">15</span>)</button>
+            </div>
+
+            <div class="upgrade-item">
+                <div class="info">
+                    <h3>Gold Mine</h3>
+                    <p>Digs up extra gold (+5/sec)</p>
+                </div>
+                <button id="buyGrandma" class="shop-btn">Buy (Cost: <span id="grandmaCost">100</span>)</button>
+            </div>
+
+            <div class="upgrade-item">
+                <div class="info">
+                    <h3>Quantum Factory</h3>
+                    <p>Bends reality to make gold (+50/sec)</p>
+                </div>
+                <button id="buyFactory" class="shop-btn">Buy (Cost: <span id="factoryCost">1000</span>)</button>
+            </div>
+        </section>
+
+        <!-- Save & Administration Buttons (NEW PART) -->
+        <div class="control-section" style="margin-top: 20px;">
+            <button id="saveBtn" class="shop-btn" style="background-color: #3498db;">Save Game</button>
+            <button id="resetBtn" class="shop-btn" style="background-color: #e74c3c;">Reset Game</button>
+        </div>
+
+        <!-- Leaderboard Section (NEW PART) -->
+        <section class="leaderboard-section" style="margin-top: 30px; border-top: 2px solid #7f8c8d; padding-top: 20px;">
+            <h2>🏆 Local High Scores</h2>
+            <button id="submitScoreBtn" class="shop-btn" style="background-color: #f1c40f; color: #2c3e50; margin-bottom: 10px;">Submit My Score</button>
+            <ol id="leaderboardList" style="text-align: left; background: #2c3e50; padding: 15px 40px; border-radius: 8px; margin: 0;"></ol>
+        </section>
+
+    </div> <!-- This closes the game-container -->
+<!-- Put this right above your script.js line -->
+<script src="https://jsdelivr.net"></script>
+<script src="script.js"></script>
+
+    <script src="script.js"></script>
+</body>
+</html>
